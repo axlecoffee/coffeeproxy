@@ -1,0 +1,20 @@
+{
+    "ui.coffeeproxy.options.proxy": "Proxy",
+    "ui.coffeeproxy.options.invalidIpPort": "Invalid IP:PORT",
+    "ui.coffeeproxy.options.proxyType": "Proxy Type: ",
+    "ui.coffeeproxy.options.auth": "Proxy Authentication (optional)",
+    "ui.coffeeproxy.options.ipPort": "IP:PORT: ",
+    "ui.coffeeproxy.options.apply": "Apply",
+    "ui.coffeeproxy.options.cancel": "Cancel",
+    "ui.coffeeproxy.options.test": "Test",
+    "ui.coffeeproxy.options.proxyEnabled": "Proxy Enabled",
+    "ui.coffeeproxy.auth.id": "User ID: ",
+    "ui.coffeeproxy.auth.username": "Username: ",
+    "ui.coffeeproxy.auth.password": "Password: ",
+    "ui.coffeeproxy.err.specProxy": "Specify proxy to test",
+    "ui.coffeeproxy.err.cantConnect": "Can't connect to proxy",
+    "ui.coffeeproxy.err.cantPing": "Can't ping %d",
+    "ui.coffeeproxy.err.cantPingReason": "Can't ping %d: %d",
+    "ui.coffeeproxy.ping.pinging": "Pinging %d...",
+    "ui.coffeeproxy.ping.showPing": "Ping: %dms"
+}

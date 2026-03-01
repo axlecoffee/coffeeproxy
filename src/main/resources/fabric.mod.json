@@ -2,16 +2,15 @@
 	"schemaVersion": 1,
 	"id": "coffeeproxy",
 	"version": "${version}",
-	"name": "coffeeproxy",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "CoffeeProxy",
+	"description": "Allows you to connect to servers through a SOCKS proxy",
 	"authors": [
-		"Me!"
+		"axlecoffee"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/axlecoffee/coffeeproxy"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/coffeeproxy/icon.png",
 	"environment": "*",
 	"entrypoints": {

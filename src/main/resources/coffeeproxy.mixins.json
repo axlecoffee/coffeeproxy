@@ -2,13 +2,13 @@
 	"required": true,
 	"package": "coffee.axle.proxy.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"ExampleMixin"
+	"mixins": [],
+	"client": [
+		"ClientConnectionInit",
+		"MultiplayerScreenOpen",
+		"ScreenAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1
-	},
-	"overwrites": {
-		"requireAnnotations": true
 	}
 }

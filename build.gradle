@@ -24,8 +24,8 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	include(implementation('io.netty:netty-handler-proxy:4.1.97.Final'))
-	include(implementation('io.netty:netty-codec-socks:4.1.97.Final'))
+	include(implementation('io.netty:netty-handler-proxy:4.1.118.Final'))
+	include(implementation('io.netty:netty-codec-socks:4.1.118.Final'))
 }
 
 processResources {
