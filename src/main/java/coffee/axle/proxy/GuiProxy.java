@@ -87,29 +87,29 @@ public class GuiProxy extends Screen {
         }
 
         context.drawTextWithShadow(this.textRenderer, Text.translatable("ui.coffeeproxy.options.proxyType").getString(),
-                this.width / 2 - 150, positionY[1] + 5, 10526880);
+                this.width / 2 - 150, positionY[1] + 5, 0xFFA0A0A0);
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.translatable("ui.coffeeproxy.options.auth").getString(), this.width / 2, positionY[3] + 8,
-                Formatting.WHITE.getColorValue());
+                0xFFFFFFFF);
         context.drawTextWithShadow(this.textRenderer, Text.translatable("ui.coffeeproxy.options.ipPort").getString(),
-                this.width / 2 - 150, positionY[2] + 5, 10526880);
+                this.width / 2 - 150, positionY[2] + 5, 0xFFA0A0A0);
 
         this.ipPort.render(context, mouseX, mouseY, partialTicks);
         if (isSocks4) {
             context.drawTextWithShadow(this.textRenderer, Text.translatable("ui.coffeeproxy.auth.id").getString(),
-                    this.width / 2 - 150, positionY[4] + 5, 10526880);
+                    this.width / 2 - 150, positionY[4] + 5, 0xFFA0A0A0);
             this.username.render(context, mouseX, mouseY, partialTicks);
         } else {
             context.drawTextWithShadow(this.textRenderer, Text.translatable("ui.coffeeproxy.auth.password").getString(),
-                    this.width / 2 - 150, positionY[5] + 5, 10526880);
+                    this.width / 2 - 150, positionY[5] + 5, 0xFFA0A0A0);
             context.drawTextWithShadow(this.textRenderer, Text.translatable("ui.coffeeproxy.auth.username").getString(),
-                    this.width / 2 - 150, positionY[4] + 5, 10526880);
+                    this.width / 2 - 150, positionY[4] + 5, 0xFFA0A0A0);
             this.username.render(context, mouseX, mouseY, partialTicks);
             this.password.render(context, mouseX, mouseY, partialTicks);
         }
 
         context.drawCenteredTextWithShadow(this.textRenderer, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
-                positionY[6] + 5, 10526880);
+                positionY[6] + 5, 0xFFA0A0A0);
     }
 
     @Override
@@ -122,7 +122,13 @@ public class GuiProxy extends Screen {
         int buttonLength = 160;
         centerButtons(10, buttonLength, 26);
 
-        isSocks4 = Coffeeproxy.proxy.type == Proxy.ProxyType.SOCKS4;
+        // Preserve widget state across resize; use config values on first open
+        String savedIpPort = this.ipPort != null ? this.ipPort.getText() : Coffeeproxy.proxy.ipPort;
+        String savedUsername = this.username != null ? this.username.getText() : Coffeeproxy.proxy.username;
+        String savedPassword = this.password != null ? this.password.getText() : Coffeeproxy.proxy.password;
+        if (this.ipPort == null) {
+            isSocks4 = Coffeeproxy.proxy.type == Proxy.ProxyType.SOCKS4;
+        }
 
         ButtonWidget proxyType = ButtonWidget.builder(Text.literal(isSocks4 ? "Socks 4" : "Socks 5"), button -> {
             isSocks4 = !isSocks4;
@@ -132,7 +138,7 @@ public class GuiProxy extends Screen {
 
         this.ipPort = new TextFieldWidget(this.textRenderer, positionX, positionY[2], buttonLength, 20,
                 Text.literal(""));
-        this.ipPort.setText(Coffeeproxy.proxy.ipPort);
+        this.ipPort.setText(savedIpPort);
         this.ipPort.setMaxLength(1024);
         this.ipPort.setFocused(true);
         this.addSelectableChild(this.ipPort);
@@ -140,13 +146,13 @@ public class GuiProxy extends Screen {
         this.username = new TextFieldWidget(this.textRenderer, positionX, positionY[4], buttonLength, 20,
                 Text.literal(""));
         this.username.setMaxLength(255);
-        this.username.setText(Coffeeproxy.proxy.username);
+        this.username.setText(savedUsername);
         this.addSelectableChild(this.username);
 
         this.password = new TextFieldWidget(this.textRenderer, positionX, positionY[5], buttonLength, 20,
                 Text.literal(""));
         this.password.setMaxLength(255);
-        this.password.setText(Coffeeproxy.proxy.password);
+        this.password.setText(savedPassword);
         this.addSelectableChild(this.password);
 
         int posXButtons = (this.width / 2) - (((buttonLength / 2) * 3) / 2);
@@ -181,8 +187,9 @@ public class GuiProxy extends Screen {
                 (this.width / 2)
                         - (15 + textRenderer.getWidth(Text.translatable("ui.coffeeproxy.options.proxyEnabled"))) / 2,
                 positionY[7]);
-        if (Coffeeproxy.proxyEnabled) {
-            checkboxBuilder.checked(Coffeeproxy.proxyEnabled);
+        boolean shouldBeChecked = this.enabledCheck != null ? this.enabledCheck.isChecked() : Coffeeproxy.proxyEnabled;
+        if (shouldBeChecked) {
+            checkboxBuilder.checked(true);
         }
         this.enabledCheck = checkboxBuilder.build();
         this.addDrawableChild(this.enabledCheck);
