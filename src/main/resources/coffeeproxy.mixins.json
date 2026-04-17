@@ -5,8 +5,7 @@
 	"mixins": [],
 	"client": [
 		"ClientConnectionInit",
-		"MultiplayerScreenOpen",
-		"ScreenAccessor"
+		"MultiplayerScreenOpen"
 	],
 	"injectors": {
 		"defaultRequire": 1

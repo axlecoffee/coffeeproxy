@@ -2,7 +2,7 @@ package coffee.axle.proxy;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class Config {
-    private static final String CONFIG_PATH = MinecraftClient.getInstance().runDirectory
+    private static final String CONFIG_PATH = Minecraft.getInstance().gameDirectory
             + "/config/CoffeeProxy.json";
     public static HashMap<String, Proxy> accounts = new HashMap<>();
     public static String lastPlayerName = "";

@@ -3,20 +3,26 @@ package coffee.axle.proxy.mixin;
 import coffee.axle.proxy.Config;
 import coffee.axle.proxy.Coffeeproxy;
 import coffee.axle.proxy.GuiProxy;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MultiplayerScreen.class)
-public class MultiplayerScreenOpen {
-    @Inject(method = "init()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/multiplayer/MultiplayerScreen;updateButtonActivationStates()V"))
-    public void multiplayerGuiOpen(CallbackInfo ci) {
-        String playerName = MinecraftClient.getInstance().getSession().getUsername();
+@Mixin(JoinMultiplayerScreen.class)
+public abstract class MultiplayerScreenOpen extends Screen {
+
+    protected MultiplayerScreenOpen(Component title) {
+        super(title);
+    }
+
+    @Inject(method = "init()V", at = @At("TAIL"))
+    private void multiplayerGuiOpen(CallbackInfo ci) {
+        String playerName = Minecraft.getInstance().getUser().getName();
         if (!playerName.equals(Config.lastPlayerName)) {
             Config.lastPlayerName = playerName;
             if (Config.accounts.containsKey(playerName)) {
@@ -28,15 +34,16 @@ public class MultiplayerScreenOpen {
             }
         }
 
-        MultiplayerScreen ms = (MultiplayerScreen) (Object) this;
-        Coffeeproxy.proxyMenuButton = ButtonWidget
-                .builder(Text.literal("Proxy: " + Coffeeproxy.getLastUsedProxyIp()), (buttonWidget) -> {
-                    MinecraftClient.getInstance().setScreen(new GuiProxy(ms));
-                }).dimensions(ms.width - 125, 5, 120, 20).build();
+        JoinMultiplayerScreen ms = (JoinMultiplayerScreen) (Object) this;
+        Coffeeproxy.proxyMenuButton = Button
+                .builder(Component.literal("Proxy: " + Coffeeproxy.getLastUsedProxyIp()), (buttonWidget) -> {
+                    //? if <26.2 {
+                    Minecraft.getInstance().setScreen(new GuiProxy(ms));
+                    //?} else {
+                    /*Minecraft.getInstance().setScreenAndShow(new GuiProxy(ms));
+                    *///?}
+                }).bounds(this.width - 125, 5, 120, 20).build();
 
-        ScreenAccessor si = (ScreenAccessor) ms;
-        si.getDrawables().add(Coffeeproxy.proxyMenuButton);
-        si.getSelectables().add(Coffeeproxy.proxyMenuButton);
-        si.getChildren().add(Coffeeproxy.proxyMenuButton);
+        this.addRenderableWidget(Coffeeproxy.proxyMenuButton);
     }
 }

@@ -7,18 +7,21 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.proxy.Socks4ProxyHandler;
 import io.netty.handler.proxy.Socks5ProxyHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.NetworkSide;
-import net.minecraft.network.DisconnectionInfo;
-import net.minecraft.network.listener.ClientQueryPacketListener;
-import net.minecraft.network.packet.c2s.query.QueryPingC2SPacket;
-import net.minecraft.network.packet.c2s.query.QueryRequestC2SPacket;
-import net.minecraft.network.packet.s2c.query.PingResultS2CPacket;
-import net.minecraft.network.packet.s2c.query.QueryResponseS2CPacket;
-import net.minecraft.network.NetworkPhase;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
+import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.DisconnectionDetails;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.ping.ClientboundPongResponsePacket;
+import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
+import net.minecraft.network.protocol.status.ClientStatusPacketListener;
+import net.minecraft.network.protocol.status.ClientboundStatusResponsePacket;
+import net.minecraft.network.protocol.status.ServerboundStatusRequestPacket;
+import net.minecraft.network.protocol.status.StatusProtocols;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+//? if <1.21.11 {
+import net.minecraft.Util;
+//?}
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -29,7 +32,7 @@ public class TestPing {
     public String state = "";
 
     private long pingSentAt;
-    private ClientConnection pingDestination = null;
+    private Connection pingDestination = null;
     private Proxy proxy;
     private static final ThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(5,
             (new ThreadFactoryBuilder()).setNameFormat("Server Pinger #%d").setDaemon(true).build());
@@ -40,72 +43,86 @@ public class TestPing {
     }
 
     private void ping(String ip, int port) {
-        state = Text.translatable("ui.coffeeproxy.ping.pinging", ip).getString();
-        ClientConnection clientConnection;
+        state = Component.translatable("ui.coffeeproxy.ping.pinging", ip).getString();
+        Connection connection;
         try {
-            clientConnection = createTestClientConnection(Proxy.resolveAddress(ip), port);
+            connection = createTestConnection(Proxy.resolveAddress(ip), port);
         } catch (UnknownHostException e) {
-            state = Formatting.RED + Text.translatable("ui.coffeeproxy.err.cantConnect").getString();
+            state = ChatFormatting.RED + Component.translatable("ui.coffeeproxy.err.cantConnect").getString();
             return;
         } catch (Exception e) {
-            state = Formatting.RED + Text.translatable("ui.coffeeproxy.err.cantPing", ip).getString();
+            state = ChatFormatting.RED + Component.translatable("ui.coffeeproxy.err.cantPing", ip).getString();
             return;
         }
-        pingDestination = clientConnection;
+        pingDestination = connection;
 
-        clientConnection.connect(ip, port, new ClientQueryPacketListener() {
+        connection.setupInboundProtocol(StatusProtocols.CLIENTBOUND, new ClientStatusPacketListener() {
             private boolean successful;
 
             @Override
-            public void onPingResult(PingResultS2CPacket packet) {
+            public void handlePongResponse(ClientboundPongResponsePacket packet) {
                 successful = true;
                 pingDestination = null;
-                long pingToServer = Util.getMeasuringTimeMs() - pingSentAt;
-                state = Text.translatable("ui.coffeeproxy.ping.showPing", pingToServer).getString();
-                clientConnection.disconnect(Text.translatable("multiplayer.status.finished"));
+                //? if <1.21.11 {
+                long pingToServer = Util.getMillis() - pingSentAt;
+                //?} else {
+                /*long pingToServer = System.currentTimeMillis() - pingSentAt;
+                *///?}
+                state = Component.translatable("ui.coffeeproxy.ping.showPing", pingToServer).getString();
+                connection.disconnect(Component.translatable("multiplayer.status.finished"));
             }
 
             @Override
-            public void onResponse(QueryResponseS2CPacket packet) {
-                pingSentAt = Util.getMeasuringTimeMs();
-                clientConnection.send(new QueryPingC2SPacket(pingSentAt));
+            public void handleStatusResponse(ClientboundStatusResponsePacket packet) {
+                //? if <1.21.11 {
+                pingSentAt = Util.getMillis();
+                //?} else {
+                /*pingSentAt = System.currentTimeMillis();
+                *///?}
+                connection.send(new ServerboundPingRequestPacket(pingSentAt));
             }
 
             @Override
-            public void onDisconnected(DisconnectionInfo info) {
+            public void onDisconnect(DisconnectionDetails details) {
                 pingDestination = null;
                 if (!this.successful) {
-                    state = Formatting.RED
-                            + Text.translatable("ui.coffeeproxy.err.cantPingReason", ip, info.reason().getString())
+                    state = ChatFormatting.RED
+                            + Component.translatable("ui.coffeeproxy.err.cantPingReason", ip, details.reason().getString())
                                     .getString();
                 }
             }
 
             @Override
-            public boolean isConnectionOpen() {
+            public boolean isAcceptingMessages() {
                 return true;
             }
 
             @Override
-            public NetworkPhase getPhase() {
-                return NetworkPhase.STATUS;
+            public ConnectionProtocol protocol() {
+                return ConnectionProtocol.STATUS;
             }
         });
 
         try {
-            clientConnection.send(QueryRequestC2SPacket.INSTANCE);
+            connection.send(ServerboundStatusRequestPacket.INSTANCE);
         } catch (Throwable throwable) {
-            state = Formatting.RED + Text.translatable("ui.coffeeproxy.err.cantPing", ip).getString();
+            state = ChatFormatting.RED + Component.translatable("ui.coffeeproxy.err.cantPing", ip).getString();
         }
     }
 
-    private ClientConnection createTestClientConnection(InetAddress address, int port) {
-        final ClientConnection clientConnection = new ClientConnection(NetworkSide.CLIENTBOUND);
+    private Connection createTestConnection(InetAddress address, int port) {
+        final Connection connection = new Connection(PacketFlow.CLIENTBOUND);
 
         Coffeeproxy.suppressProxyMixin = true;
         try {
+            //? if <1.21.11 {
             new Bootstrap()
-                    .group(ClientConnection.CLIENT_IO_GROUP.get())
+                    .group(Connection.NETWORK_WORKER_GROUP.get())
+            //?} else {
+            /*var eventLoopHolder = net.minecraft.server.network.EventLoopGroupHolder.remote(false);
+            new Bootstrap()
+                    .group(eventLoopHolder.eventLoopGroup())
+            *///?}
                     .handler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel channel) {
@@ -116,33 +133,40 @@ public class TestPing {
 
                             ChannelPipeline pipeline = channel.pipeline().addLast("timeout",
                                     new ReadTimeoutHandler(30));
-                            ClientConnection.addHandlers(pipeline, NetworkSide.CLIENTBOUND, false, null);
-                            clientConnection.addFlowControlHandler(pipeline);
+                            Connection.configureSerialization(pipeline, PacketFlow.CLIENTBOUND, false, null);
+                            connection.configurePacketHandler(pipeline);
 
-                            if (proxy.type == Proxy.ProxyType.SOCKS5) {
-                                channel.pipeline().addFirst(new Socks5ProxyHandler(
+                            switch (proxy.type) {
+                                case SOCKS5 -> channel.pipeline().addFirst(new Socks5ProxyHandler(
                                         proxy.resolveProxyAddress(),
                                         proxy.username.isEmpty() ? null : proxy.username,
                                         proxy.password.isEmpty() ? null : proxy.password));
-                            } else {
-                                channel.pipeline().addFirst(new Socks4ProxyHandler(
+                                case SOCKS4 -> channel.pipeline().addFirst(new Socks4ProxyHandler(
                                         proxy.resolveProxyAddress(),
                                         proxy.username.isEmpty() ? null : proxy.username));
+                                case HTTP -> channel.pipeline().addFirst(new io.netty.handler.proxy.HttpProxyHandler(
+                                        proxy.resolveProxyAddress(),
+                                        proxy.username.isEmpty() ? null : proxy.username,
+                                        proxy.password.isEmpty() ? "" : proxy.password));
                             }
                         }
                     })
+                    //? if <1.21.11 {
                     .channel(NioSocketChannel.class)
+                    //?} else {
+                    /*.channel(eventLoopHolder.channelCls())
+                    *///?}
                     .connect(address, port)
                     .syncUninterruptibly();
         } finally {
             Coffeeproxy.suppressProxyMixin = false;
         }
-        return clientConnection;
+        return connection;
     }
 
     public void pingPendingNetworks() {
         if (pingDestination != null) {
-            if (pingDestination.isOpen()) {
+            if (pingDestination.isConnected()) {
                 pingDestination.tick();
             } else {
                 pingDestination.handleDisconnection();

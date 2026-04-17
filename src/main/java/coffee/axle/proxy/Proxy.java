@@ -24,7 +24,11 @@ public class Proxy {
     }
 
     public Proxy(boolean isSocks4, String ipPort, String username, String password) {
-        this.type = isSocks4 ? ProxyType.SOCKS4 : ProxyType.SOCKS5;
+        this(isSocks4 ? ProxyType.SOCKS4 : ProxyType.SOCKS5, ipPort, username, password);
+    }
+
+    public Proxy(ProxyType type, String ipPort, String username, String password) {
+        this.type = type;
         this.ipPort = ipPort;
         this.username = username;
         this.password = password;
@@ -61,7 +65,8 @@ public class Proxy {
 
     public enum ProxyType {
         SOCKS4,
-        SOCKS5
+        SOCKS5,
+        HTTP
     }
 
     private record CachedResolve(InetAddress address, long timestamp) {
