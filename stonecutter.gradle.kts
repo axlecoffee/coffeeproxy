@@ -1,6 +1,10 @@
+// SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
+//
+// SPDX-License-Identifier: MIT
+
 plugins {
     id("dev.kikugie.stonecutter")
-    id("net.fabricmc.fabric-loom-remap") version "1.16.1" apply false
-    id("net.fabricmc.fabric-loom") version "1.16.1" apply false
+    id("coffee.axle.blahaj")
 }
-stonecutter active "1.21.10" /* [SC] DO NOT EDIT */
+
+stonecutter active "1.21.10-fabric" /* [SC] DO NOT EDIT */

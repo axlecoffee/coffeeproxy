@@ -18,6 +18,7 @@ import net.minecraft.client.input.KeyEvent;
 //?}
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.lang3.StringUtils;
 
 public class GuiProxy extends Screen {
@@ -27,6 +28,7 @@ public class GuiProxy extends Screen {
     private EditBox username;
     private EditBox password;
     private Checkbox enabledCheck;
+    private Checkbox showMultiplayerCheck;
 
     private final Screen parentScreen;
 
@@ -168,7 +170,7 @@ public class GuiProxy extends Screen {
     @Override
     public void init() {
         int buttonLength = 160;
-        centerButtons(10, buttonLength, 32);
+        centerButtons(11, buttonLength, 32);
 
         String savedIpPort = this.ipPort != null ? this.ipPort.getValue() : Coffeeproxy.proxy.ipPort;
         String savedUsername = this.username != null ? this.username.getValue() : Coffeeproxy.proxy.username;
@@ -206,18 +208,23 @@ public class GuiProxy extends Screen {
         int posXButtons = (this.width / 2) - (((buttonLength / 2) * 3) / 2);
 
         Button apply = Button.builder(Component.translatable("ui.coffeeproxy.options.apply"), button -> {
-            if (checkProxy()) {
+            Config.showMultiplayerButton = showMultiplayerCheck.selected();
+            if (!ipPort.getValue().isEmpty() && !checkProxy()) {
+                Config.saveConfig();
+                return;
+            }
+            if (!ipPort.getValue().isEmpty()) {
                 Coffeeproxy.proxy = new Proxy(currentType, ipPort.getValue(), username.getValue(), password.getValue());
                 Coffeeproxy.proxyEnabled = enabledCheck.selected();
                 Config.setDefaultProxy(Coffeeproxy.proxy);
-                Config.saveConfig();
-                //? if <26.2 {
-                Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(new TitleScreen()));
-                //?} else {
-                /*Minecraft.getInstance().setScreenAndShow(new JoinMultiplayerScreen(new TitleScreen()));
-                *///?}
             }
-        }).bounds(posXButtons, positionY[8], buttonLength / 2 - 3, 20).build();
+            Config.saveConfig();
+            //? if <26.2 {
+            Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(new TitleScreen()));
+            //?} else {
+            /*Minecraft.getInstance().setScreenAndShow(new JoinMultiplayerScreen(new TitleScreen()));
+            *///?}
+        }).bounds(posXButtons, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(apply);
 
         Button test = Button.builder(Component.translatable("ui.coffeeproxy.options.test"), (button) -> {
@@ -230,7 +237,7 @@ public class GuiProxy extends Screen {
                 testPing.run("mc.hypixel.net", 25565,
                         new Proxy(currentType, ipPort.getValue(), username.getValue(), password.getValue()));
             }
-        }).bounds(posXButtons + buttonLength / 2 + 3, positionY[8], buttonLength / 2 - 3, 20).build();
+        }).bounds(posXButtons + buttonLength / 2 + 3, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(test);
 
         Checkbox.Builder checkboxBuilder = Checkbox
@@ -246,13 +253,27 @@ public class GuiProxy extends Screen {
         this.enabledCheck = checkboxBuilder.build();
         this.addRenderableWidget(this.enabledCheck);
 
+        Checkbox.Builder showMultiplayerBuilder = Checkbox
+                .builder(Component.translatable("ui.coffeeproxy.options.showMultiplayerButton"), this.font);
+        showMultiplayerBuilder.pos(
+                (this.width / 2)
+                        - (15 + font.width(Component.translatable("ui.coffeeproxy.options.showMultiplayerButton"))) / 2,
+                positionY[8]);
+        boolean shouldShowMultiplayer = this.showMultiplayerCheck != null ? this.showMultiplayerCheck.selected() : Config.showMultiplayerButton;
+        if (shouldShowMultiplayer) {
+            showMultiplayerBuilder.selected(true);
+        }
+        this.showMultiplayerCheck = showMultiplayerBuilder.build();
+        this.showMultiplayerCheck.active = FabricLoader.getInstance().isModLoaded("modmenu");
+        this.addRenderableWidget(this.showMultiplayerCheck);
+
         Button cancel = Button.builder(Component.translatable("ui.coffeeproxy.options.cancel"), (button) -> {
             //? if <26.2 {
             Minecraft.getInstance().setScreen(parentScreen);
             //?} else {
             /*Minecraft.getInstance().setScreenAndShow(parentScreen);
             *///?}
-        }).bounds(posXButtons + (buttonLength / 2 + 3) * 2, positionY[8], buttonLength / 2 - 3, 20).build();
+        }).bounds(posXButtons + (buttonLength / 2 + 3) * 2, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(cancel);
     }
 

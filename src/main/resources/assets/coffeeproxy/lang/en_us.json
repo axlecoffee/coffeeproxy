@@ -8,6 +8,7 @@
     "ui.coffeeproxy.options.cancel": "Cancel",
     "ui.coffeeproxy.options.test": "Test",
     "ui.coffeeproxy.options.proxyEnabled": "Proxy Enabled",
+    "ui.coffeeproxy.options.showMultiplayerButton": "Show in Multiplayer Screen",
     "ui.coffeeproxy.auth.id": "User ID: ",
     "ui.coffeeproxy.auth.username": "Username: ",
     "ui.coffeeproxy.auth.password": "Password: ",

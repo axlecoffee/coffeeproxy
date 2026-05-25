@@ -1,61 +1,31 @@
-import net.fabricmc.loom.task.RemapJarTask
+// SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
+//
+// SPDX-License-Identifier: MIT
 
 plugins {
-    id("net.fabricmc.fabric-loom-remap")
+    id("coffee.axle.blahaj")
 }
 
-val modVersion: String by project
-val mavenGroup: String by project
-val archivesBaseName: String by project
-val loaderVersion: String by project
-val fabricApiVersion: String by project
-
-version = "${modVersion}+${stonecutter.current.version}"
-group = mavenGroup
-base { archivesName.set(archivesBaseName) }
-
-val javaTarget = JavaVersion.VERSION_21
-
-java {
-    withSourcesJar()
-    sourceCompatibility = javaTarget
-    targetCompatibility = javaTarget
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-}
-
-@Suppress("UnstableApiUsage")
-loom {
-    mixin { useLegacyMixinAp = false }
-}
-
-dependencies {
-    minecraft("com.mojang:minecraft:${stonecutter.current.version}")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}")
-    include(implementation("io.netty:netty-handler-proxy:4.1.118.Final")!!)
-    include(implementation("io.netty:netty-codec-socks:4.1.118.Final")!!)
-}
-
-tasks.processResources {
-    inputs.property("version", project.version)
-    filesMatching("fabric.mod.json") {
-        expand(mapOf("version" to inputs.properties["version"]))
+blahaj {
+    config {}
+    setup {
+        /*
+        deps.add("implementation", "io.netty:netty-handler-proxy:4.1.118.Final")
+        deps.add("include", "io.netty:netty-handler-proxy:4.1.118.Final")
+        deps.add("implementation", "io.netty:netty-codec-socks:4.1.118.Final")
+        deps.add("include", "io.netty:netty-codec-socks:4.1.118.Final")
+        */
     }
 }
 
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-    options.release.set(javaTarget.majorVersion.toInt())
-}
+// god knows
+tasks.named("distTar") { enabled = false }
+tasks.named("distZip") { enabled = false }
 
-tasks.jar {
-    from("LICENSE") { rename { "${it}_${archivesBaseName}" } }
-}
-
-tasks.register<Copy>("buildAndCollect") {
-    group = "build"
-    from(tasks.named("remapJar").map { (it as RemapJarTask).archiveFile })
-    into(rootProject.layout.buildDirectory.dir("libs/${modVersion}"))
-    dependsOn("build")
+dependencies {
+    include(implementation("io.netty:netty-handler-proxy:4.1.118.Final")!!)
+    include(implementation("io.netty:netty-codec-socks:4.1.118.Final")!!)
+    include(implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.1")!!)
+    include(implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.8.1")!!)
+    include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.10.2")!!)
 }

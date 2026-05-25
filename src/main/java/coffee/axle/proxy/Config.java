@@ -16,6 +16,7 @@ public class Config {
             + "/config/CoffeeProxy.json";
     public static HashMap<String, Proxy> accounts = new HashMap<>();
     public static String lastPlayerName = "";
+    public static boolean showMultiplayerButton = true;
 
     public static void loadConfig() {
         File configFile = new File(CONFIG_PATH);
@@ -30,6 +31,8 @@ public class Config {
             if (!configString.isEmpty()) {
                 JsonObject configJson = JsonParser.parseString(configString).getAsJsonObject();
                 Coffeeproxy.proxyEnabled = configJson.get("proxy-enabled").getAsBoolean();
+                JsonElement showBtn = configJson.get("show-multiplayer-button");
+                Config.showMultiplayerButton = showBtn == null || showBtn.getAsBoolean();
                 Type type = new TypeToken<HashMap<String, Proxy>>() {
                 }.getType();
                 accounts = new Gson().fromJson(configJson.get("accounts"), type);
@@ -52,6 +55,7 @@ public class Config {
             JsonElement accountsJsonObject = new Gson().toJsonTree(accounts);
             JsonObject configJson = new JsonObject();
             configJson.addProperty("proxy-enabled", Coffeeproxy.proxyEnabled);
+            configJson.addProperty("show-multiplayer-button", showMultiplayerButton);
             configJson.add("accounts", accountsJsonObject);
             Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
             FileUtils.write(new File(CONFIG_PATH), gsonPretty.toJson(configJson), StandardCharsets.UTF_8);
