@@ -22,7 +22,7 @@ plugins {
     id("dev.architectury.loom") version "1.14.473" apply false
     kotlin("jvm") version "2.3.10" apply false
     kotlin("plugin.serialization") version "2.3.10" apply false
-    id("coffee.axle.blahaj") version "3.1.1"
+    id("coffee.axle.blahaj") version "3.2.2"
     id("dev.kikugie.stonecutter") version "0.9.1"
 }
 
@@ -49,6 +49,6 @@ blahaj {
         mc("1.21.10", "fabric")
         mc("1.21.11", "fabric")
         mc("26.1.2", "fabric")
-        // mc("26.2", "fabric") //blahaj doesnt really have this
+        mc("26.2", "fabric")
     }
 }

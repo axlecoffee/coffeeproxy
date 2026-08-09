@@ -46,7 +46,7 @@ public abstract class MultiplayerScreenOpen extends Screen {
                         //? if <26.2 {
                         Minecraft.getInstance().setScreen(new GuiProxy(ms));
                         //?} else {
-                        /*Minecraft.getInstance().setScreenAndShow(new GuiProxy(ms));
+                        /*Minecraft.getInstance().gui.setScreen(new GuiProxy(ms));
                         *///?}
                     }).size(120, 20).build();
         }

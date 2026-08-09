@@ -222,7 +222,7 @@ public class GuiProxy extends Screen {
             //? if <26.2 {
             Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(new TitleScreen()));
             //?} else {
-            /*Minecraft.getInstance().setScreenAndShow(new JoinMultiplayerScreen(new TitleScreen()));
+            /*Minecraft.getInstance().gui.setScreen(new JoinMultiplayerScreen(new TitleScreen()));
             *///?}
         }).bounds(posXButtons, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(apply);
@@ -271,7 +271,7 @@ public class GuiProxy extends Screen {
             //? if <26.2 {
             Minecraft.getInstance().setScreen(parentScreen);
             //?} else {
-            /*Minecraft.getInstance().setScreenAndShow(parentScreen);
+            /*Minecraft.getInstance().gui.setScreen(parentScreen);
             *///?}
         }).bounds(posXButtons + (buttonLength / 2 + 3) * 2, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(cancel);
