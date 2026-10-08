@@ -1,36 +1,29 @@
+// SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 package coffee.axle.proxy;
 
-import net.minecraft.client.Minecraft;
-//? if <26 {
 import net.minecraft.client.gui.GuiGraphics;
-//?} else {
-/*import net.minecraft.client.gui.GuiGraphicsExtractor;
-*///?}
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 //? if >=1.21.10 {
-import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 //?}
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.lang3.StringUtils;
 
 public class GuiProxy extends Screen {
     private Proxy.ProxyType currentType = Proxy.ProxyType.SOCKS5;
 
+    private EditBox name;
     private EditBox ipPort;
     private EditBox username;
     private EditBox password;
-    private Checkbox enabledCheck;
-    private Checkbox showMultiplayerCheck;
 
     private final Screen parentScreen;
+    private final String editName;
 
     private String msg = "";
 
@@ -41,9 +34,10 @@ public class GuiProxy extends Screen {
 
     private static final String TEXT_PROXY = Component.translatable("ui.coffeeproxy.options.proxy").getString();
 
-    public GuiProxy(Screen parentScreen) {
+    public GuiProxy(Screen parentScreen, String editName) {
         super(Component.literal(TEXT_PROXY));
         this.parentScreen = parentScreen;
+        this.editName = editName;
     }
 
     private static boolean isValidIpPort(String ipP) {
@@ -97,69 +91,37 @@ public class GuiProxy extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
     //?} else {
-    /*public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    /*public void extractRenderState(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
     *///?}
 
-        if (enabledCheck.selected() && !isValidIpPort(ipPort.getValue())) {
-            //? if >=1.21.10 {
-            enabledCheck.onPress((InputWithModifiers) new KeyEvent(0, 0, 0));
-            //?} else {
-            /*enabledCheck.onPress();
-            *///?}
-        }
-
-        //? if <26 {
-        guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.options.proxyType").getString(),
+        Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.options.name").getString(),
                 positionX, positionY[1] - 10, 0xFFA0A0A0);
-        guiGraphics.drawCenteredString(this.font,
-                Component.translatable("ui.coffeeproxy.options.auth").getString(), this.width / 2, positionY[3] + 8,
-                0xFFFFFFFF);
-        guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.options.ipPort").getString(),
+        Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.options.proxyType").getString(),
                 positionX, positionY[2] - 10, 0xFFA0A0A0);
+        Draw.centeredText(guiGraphics, this.font,
+                Component.translatable("ui.coffeeproxy.options.auth").getString(), this.width / 2, positionY[4] + 8,
+                0xFFFFFFFF);
+        Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.options.ipPort").getString(),
+                positionX, positionY[3] - 10, 0xFFA0A0A0);
 
-        this.ipPort.render(guiGraphics, mouseX, mouseY, partialTicks);
+        Draw.widget(guiGraphics, this.name, mouseX, mouseY, partialTicks);
+        Draw.widget(guiGraphics, this.ipPort, mouseX, mouseY, partialTicks);
         if (currentType == Proxy.ProxyType.SOCKS4) {
-            guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.auth.id").getString(),
-                    positionX, positionY[4] - 10, 0xFFA0A0A0);
-            this.username.render(guiGraphics, mouseX, mouseY, partialTicks);
-        } else {
-            guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.auth.password").getString(),
+            Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.auth.id").getString(),
                     positionX, positionY[5] - 10, 0xFFA0A0A0);
-            guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.auth.username").getString(),
-                    positionX, positionY[4] - 10, 0xFFA0A0A0);
-            this.username.render(guiGraphics, mouseX, mouseY, partialTicks);
-            this.password.render(guiGraphics, mouseX, mouseY, partialTicks);
+            Draw.widget(guiGraphics, this.username, mouseX, mouseY, partialTicks);
+        } else {
+            Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.auth.password").getString(),
+                    positionX, positionY[6] - 10, 0xFFA0A0A0);
+            Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.auth.username").getString(),
+                    positionX, positionY[5] - 10, 0xFFA0A0A0);
+            Draw.widget(guiGraphics, this.username, mouseX, mouseY, partialTicks);
+            Draw.widget(guiGraphics, this.password, mouseX, mouseY, partialTicks);
         }
 
-        guiGraphics.drawCenteredString(this.font, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
-                positionY[6] + 5, 0xFFA0A0A0);
-        //?} else {
-        /*guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.options.proxyType").getString(),
-                positionX, positionY[1] - 10, 0xFFA0A0A0);
-        guiGraphics.centeredText(this.font,
-                Component.translatable("ui.coffeeproxy.options.auth").getString(), this.width / 2, positionY[3] + 8,
-                0xFFFFFFFF);
-        guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.options.ipPort").getString(),
-                positionX, positionY[2] - 10, 0xFFA0A0A0);
-
-        this.ipPort.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        if (currentType == Proxy.ProxyType.SOCKS4) {
-            guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.auth.id").getString(),
-                    positionX, positionY[4] - 10, 0xFFA0A0A0);
-            this.username.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        } else {
-            guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.auth.password").getString(),
-                    positionX, positionY[5] - 10, 0xFFA0A0A0);
-            guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.auth.username").getString(),
-                    positionX, positionY[4] - 10, 0xFFA0A0A0);
-            this.username.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-            this.password.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        }
-
-        guiGraphics.centeredText(this.font, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
-                positionY[6] + 5, 0xFFA0A0A0);
-        *///?}
+        Draw.centeredText(guiGraphics, this.font, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
+                positionY[7] + 5, 0xFFA0A0A0);
     }
 
     @Override
@@ -172,34 +134,44 @@ public class GuiProxy extends Screen {
         int buttonLength = 160;
         centerButtons(11, buttonLength, 32);
 
-        String savedIpPort = this.ipPort != null ? this.ipPort.getValue() : Coffeeproxy.proxy.ipPort;
-        String savedUsername = this.username != null ? this.username.getValue() : Coffeeproxy.proxy.username;
-        String savedPassword = this.password != null ? this.password.getValue() : Coffeeproxy.proxy.password;
+        String entry = editName == null ? "" : Config.proxies.getOrDefault(editName, "");
+        Proxy saved = entry.isEmpty() ? new Proxy() : Proxy.parse(entry);
+
+        String savedName = this.name != null ? this.name.getValue() : (editName == null ? "" : editName);
+        String savedIpPort = this.ipPort != null ? this.ipPort.getValue() : saved.ipPort;
+        String savedUsername = this.username != null ? this.username.getValue() : saved.username;
+        String savedPassword = this.password != null ? this.password.getValue() : saved.password;
         if (this.ipPort == null) {
-            currentType = Coffeeproxy.proxy.type;
+            currentType = saved.type;
         }
+
+        this.name = new EditBox(this.font, positionX, positionY[1], buttonLength, 20,
+                Component.literal(""));
+        this.name.setValue(savedName);
+        this.name.setMaxLength(64);
+        this.name.setFocused(true);
+        this.addWidget(this.name);
 
         Button proxyType = Button.builder(Component.literal(currentType.name()), button -> {
             Proxy.ProxyType[] values = Proxy.ProxyType.values();
             currentType = values[(currentType.ordinal() + 1) % values.length];
             button.setMessage(Component.literal(currentType.name()));
-        }).bounds(positionX, positionY[1], buttonLength, 20).build();
+        }).bounds(positionX, positionY[2], buttonLength, 20).build();
         this.addRenderableWidget(proxyType);
 
-        this.ipPort = new EditBox(this.font, positionX, positionY[2], buttonLength, 20,
+        this.ipPort = new EditBox(this.font, positionX, positionY[3], buttonLength, 20,
                 Component.literal(""));
         this.ipPort.setValue(savedIpPort);
         this.ipPort.setMaxLength(1024);
-        this.ipPort.setFocused(true);
         this.addWidget(this.ipPort);
 
-        this.username = new EditBox(this.font, positionX, positionY[4], buttonLength, 20,
+        this.username = new EditBox(this.font, positionX, positionY[5], buttonLength, 20,
                 Component.literal(""));
         this.username.setMaxLength(255);
         this.username.setValue(savedUsername);
         this.addWidget(this.username);
 
-        this.password = new EditBox(this.font, positionX, positionY[5], buttonLength, 20,
+        this.password = new EditBox(this.font, positionX, positionY[6], buttonLength, 20,
                 Component.literal(""));
         this.password.setMaxLength(255);
         this.password.setValue(savedPassword);
@@ -207,23 +179,29 @@ public class GuiProxy extends Screen {
 
         int posXButtons = (this.width / 2) - (((buttonLength / 2) * 3) / 2);
 
-        Button apply = Button.builder(Component.translatable("ui.coffeeproxy.options.apply"), button -> {
-            Config.showMultiplayerButton = showMultiplayerCheck.selected();
-            if (!ipPort.getValue().isEmpty() && !checkProxy()) {
-                Config.saveConfig();
+        Button apply = Button.builder(Component.translatable("ui.coffeeproxy.options.save"), button -> {
+            String entryName = name.getValue().trim();
+            if (entryName.isEmpty()) {
+                msg = ChatFormatting.RED + Component.translatable("ui.coffeeproxy.err.specName").getString();
+                this.name.setFocused(true);
                 return;
             }
-            if (!ipPort.getValue().isEmpty()) {
-                Coffeeproxy.proxy = new Proxy(currentType, ipPort.getValue(), username.getValue(), password.getValue());
-                Coffeeproxy.proxyEnabled = enabledCheck.selected();
-                Config.setDefaultProxy(Coffeeproxy.proxy);
+            if (!checkProxy()) {
+                return;
+            }
+            Proxy edited = new Proxy(currentType, ipPort.getValue(), username.getValue(), password.getValue());
+            if (editName != null && !editName.equals(entryName)) {
+                Config.proxies.remove(editName);
+                if (Config.activeName.equals(editName)) {
+                    Config.activeName = entryName;
+                }
+            }
+            Config.proxies.put(entryName, edited.format());
+            if (entryName.equals(Config.activeName)) {
+                Config.setActive(entryName);
             }
             Config.saveConfig();
-            //? if <26.2 {
-            Minecraft.getInstance().setScreen(new JoinMultiplayerScreen(new TitleScreen()));
-            //?} else {
-            /*Minecraft.getInstance().gui.setScreen(new JoinMultiplayerScreen(new TitleScreen()));
-            *///?}
+            Coffeeproxy.openScreen(parentScreen);
         }).bounds(posXButtons, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(apply);
 
@@ -234,45 +212,14 @@ public class GuiProxy extends Screen {
             }
             if (checkProxy()) {
                 testPing = new TestPing();
-                testPing.run("mc.hypixel.net", 25565,
+                testPing.run("anticheat-test.com", 25565,
                         new Proxy(currentType, ipPort.getValue(), username.getValue(), password.getValue()));
             }
         }).bounds(posXButtons + buttonLength / 2 + 3, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(test);
 
-        Checkbox.Builder checkboxBuilder = Checkbox
-                .builder(Component.translatable("ui.coffeeproxy.options.proxyEnabled"), this.font);
-        checkboxBuilder.pos(
-                (this.width / 2)
-                        - (15 + font.width(Component.translatable("ui.coffeeproxy.options.proxyEnabled"))) / 2,
-                positionY[7]);
-        boolean shouldBeChecked = this.enabledCheck != null ? this.enabledCheck.selected() : Coffeeproxy.proxyEnabled;
-        if (shouldBeChecked) {
-            checkboxBuilder.selected(true);
-        }
-        this.enabledCheck = checkboxBuilder.build();
-        this.addRenderableWidget(this.enabledCheck);
-
-        Checkbox.Builder showMultiplayerBuilder = Checkbox
-                .builder(Component.translatable("ui.coffeeproxy.options.showMultiplayerButton"), this.font);
-        showMultiplayerBuilder.pos(
-                (this.width / 2)
-                        - (15 + font.width(Component.translatable("ui.coffeeproxy.options.showMultiplayerButton"))) / 2,
-                positionY[8]);
-        boolean shouldShowMultiplayer = this.showMultiplayerCheck != null ? this.showMultiplayerCheck.selected() : Config.showMultiplayerButton;
-        if (shouldShowMultiplayer) {
-            showMultiplayerBuilder.selected(true);
-        }
-        this.showMultiplayerCheck = showMultiplayerBuilder.build();
-        this.showMultiplayerCheck.active = FabricLoader.getInstance().isModLoaded("modmenu");
-        this.addRenderableWidget(this.showMultiplayerCheck);
-
         Button cancel = Button.builder(Component.translatable("ui.coffeeproxy.options.cancel"), (button) -> {
-            //? if <26.2 {
-            Minecraft.getInstance().setScreen(parentScreen);
-            //?} else {
-            /*Minecraft.getInstance().gui.setScreen(parentScreen);
-            *///?}
+            Coffeeproxy.openScreen(parentScreen);
         }).bounds(posXButtons + (buttonLength / 2 + 3) * 2, positionY[9], buttonLength / 2 - 3, 20).build();
         this.addRenderableWidget(cancel);
     }

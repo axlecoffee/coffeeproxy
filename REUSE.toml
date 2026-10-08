@@ -1,0 +1,63 @@
+# SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+SPDX-PackageName = "CoffeeProxy"
+SPDX-PackageSupplier = "Axle Duggan (axlecoffee) <contact@axle.coffee>"
+SPDX-PackageDownloadLocation = "https://github.com/axlecoffee/coffeeproxy"
+
+[[annotations]]
+path = ["**/*.java"]
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+SPDX-FileCopyrightText = "2026 Axle Duggan (axlecoffee) <contact@axle.coffee>"
+
+[[annotations]]
+path = [
+    "**/*.gradle.kts",
+    "**/gradle.properties",
+    "**/gradle-wrapper.properties",
+    "**/fabric.mod.json",
+    "**/*.mixins.json",
+    "**/stonecutter.gradle.kts",
+]
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "2026 Axle Duggan (axlecoffee) <contact@axle.coffee>"
+
+[[annotations]]
+path = [
+    "gradlew",
+    "gradlew.bat",
+]
+SPDX-License-Identifier = "Apache-2.0"
+SPDX-FileCopyrightText = "Gradle, Inc."
+
+[[annotations]]
+path = "gradle/wrapper/gradle-wrapper.jar"
+SPDX-License-Identifier = "Apache-2.0"
+SPDX-FileCopyrightText = "Gradle, Inc."
+
+[[annotations]]
+path = [
+    ".gitattributes",
+    ".gitignore",
+    ".github/**",
+    "README.md",
+]
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "2026 Axle Duggan (axlecoffee) <contact@axle.coffee>"
+
+[[annotations]]
+path = "LICENSES/**"
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "2026 Axle Duggan (axlecoffee) <contact@axle.coffee>"
+
+[[annotations]]
+path = "src/main/resources/assets/**"
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "2026 Axle Duggan (axlecoffee) <contact@axle.coffee>"
+
+[[annotations]]
+path = "LICENSE"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+SPDX-FileCopyrightText = "2026 Axle Duggan (axlecoffee) <contact@axle.coffee>"

@@ -10,8 +10,8 @@
 	"contact": {
 		"sources": "https://github.com/axlecoffee/coffeeproxy"
 	},
-	"license": "MIT",
-	"icon": "assets/coffeeproxy/icon.png",
+	"license": "AGPL-3.0-or-later",
+	"icon": "assets/coffeeproxy/logo.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [

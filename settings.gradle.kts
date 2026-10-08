@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
 //
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: CC0-1.0
 
 pluginManagement {
     repositories {
@@ -22,8 +22,8 @@ plugins {
     id("dev.architectury.loom") version "1.14.473" apply false
     kotlin("jvm") version "2.3.10" apply false
     kotlin("plugin.serialization") version "2.3.10" apply false
-    id("coffee.axle.blahaj") version "3.2.2"
-    id("dev.kikugie.stonecutter") version "0.9.1"
+    id("coffee.axle.blahaj") version "3.3.1"
+    id("dev.kikugie.stonecutter") version "0.9.8"
 }
 
 rootProject.name = settings.extra["mod.name"] as String
@@ -50,5 +50,6 @@ blahaj {
         mc("1.21.11", "fabric")
         mc("26.1.2", "fabric")
         mc("26.2", "fabric")
+        mc("26.3", "fabric")
     }
 }
