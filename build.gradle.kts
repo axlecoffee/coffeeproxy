@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
 //
-// SPDX-License-Identifier: MIT
-
+// SPDX-License-Identifier: CC0-1.0
 plugins {
     id("coffee.axle.blahaj")
 }
@@ -9,12 +8,6 @@ plugins {
 blahaj {
     config {}
     setup {
-        /*
-        deps.add("implementation", "io.netty:netty-handler-proxy:4.1.118.Final")
-        deps.add("include", "io.netty:netty-handler-proxy:4.1.118.Final")
-        deps.add("implementation", "io.netty:netty-codec-socks:4.1.118.Final")
-        deps.add("include", "io.netty:netty-codec-socks:4.1.118.Final")
-        */
     }
 }
 

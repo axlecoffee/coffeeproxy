@@ -1,8 +1,8 @@
 # CoffeeProxy
 
-CoffeeProxy is a simple HTTP/SOCKS5 proxy mod for Minecraft Fabric 1.21.10.
+CoffeeProxy is a simple HTTP/SOCKS5 proxy mod for Minecraft Fabric 1.21.4-26.3!
 
-I had this mod in 1.8.9 but I couldn't find a single mod that did this for 1.21.10, so 1 ai slop prompt later and it exists or wtv.
+I had this mod in 1.8.9 but I couldn't find a single mod that did this for 1.21.10, ~~so 1 ai slop prompt later and it exists or wtv.~~ nah, I human-made this a while later.
 
 ## Support/Whatever
 
@@ -14,6 +14,6 @@ If you use the mod Firmament on hypixel skyblock, it is suggested to use another
 
 ## License
 
-I am a catboy; therefore, everything is open source. Feel free to skid this 52 different times, I really don't care. If it breaks dm me on discord - @axle.coffee or open a github issue or fix it yourself and open a PR MY code is licensed under MIT
+I am a catboy; therefore, everything is open source. Feel free to skid this 52 different times, I really don't care. If it breaks dm me on discord - @axle.coffee or open a github issue or fix it yourself and open a PR MY code is licensed under AGPL-3.0-or-later
 
-If there is any code that can't be distributed under an MIT license, please message me on discord or open an issue or whatever.
+As of September 2026, I am slowly moving all my projects to AGPL-3.0-or-later - if I have used code from any projects that are incompatible with this license, contact me on discord, and I will gladly resolve this!!
