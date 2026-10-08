@@ -1,21 +1,23 @@
+// SPDX-FileCopyrightText: 2026 Axle Duggan (axlecoffee) <contact@axle.coffee>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 package coffee.axle.proxy;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 public class Coffeeproxy implements ModInitializer {
 	public static boolean proxyEnabled = false;
 	public static Proxy proxy = new Proxy();
-	public static Proxy lastUsedProxy = new Proxy();
-	public static Button proxyMenuButton;
-	public static boolean suppressProxyMixin = false;
-
-	public static String getLastUsedProxyIp() {
-		return lastUsedProxy.ipPort.isEmpty() ? "none" : lastUsedProxy.getIp();
-	}
 
 	@Override
 	public void onInitialize() {
 		Config.loadConfig();
+		Config.setActive(Config.activeName);
+	}
+
+	public static void openScreen(Screen screen) {
+		Minecraft.getInstance().setScreen(screen);
 	}
 }
