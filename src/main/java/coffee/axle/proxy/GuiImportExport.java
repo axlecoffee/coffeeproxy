@@ -46,7 +46,6 @@ public class GuiImportExport extends Screen {
 
     private String msg = "";
     private LinkedHashMap<String, String> pending;
-    // written by the fetch thread, consumed on the tick (main) thread
     private volatile String fetched;
     private volatile boolean fetchFailed;
     private boolean fetching;
@@ -142,7 +141,9 @@ public class GuiImportExport extends Screen {
                         .GET().build();
                 body = HTTP.send(request, BodyHandlers.ofString()).body();
             } catch (Exception e) {
+                // TODO: display error CODE?
                 // bad url / timeout / refused
+                e.printStackTrace();
                 failed = true;
             }
             this.fetchFailed = failed;
@@ -164,7 +165,7 @@ public class GuiImportExport extends Screen {
             Config.proxies.putAll(this.pending);
             Config.setActive(Config.proxies.containsKey(Config.activeName) ? Config.activeName : "");
         } else {
-            // colliding names get a number so re-importing the same list duplicates instead of replaces
+            // duplicate names get number appended since it's just logical
             for (var entry : this.pending.entrySet()) {
                 String name = entry.getKey();
                 for (int n = 2; Config.proxies.containsKey(name); n++) {
@@ -178,7 +179,6 @@ public class GuiImportExport extends Screen {
     }
 
     private void exportClipboard() {
-        // the exported list doubles as the selected payload, so export -> save round trips without another click
         this.pending = new LinkedHashMap<>(Config.proxies);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonObject root = new JsonObject();
