@@ -139,11 +139,7 @@ public class GuiProxyList extends Screen {
         this.deleteButton.active = selected != null;
         this.editButton.active = selected != null;
 
-        //? if <26 {
-        guiGraphics.drawCenteredString(this.font, TEXT_TITLE, this.width / 2, 8, 0xFFFFFFFF);
-        //?} else {
-        /*guiGraphics.centeredText(this.font, TEXT_TITLE, this.width / 2, 8, 0xFFFFFFFF);
-        *///?}
+        Draw.centeredText(guiGraphics, this.font, TEXT_TITLE, this.width / 2, 8, 0xFFFFFFFF);
     }
 
     @Override
@@ -297,30 +293,16 @@ public class GuiProxyList extends Screen {
         }
         //?}
 
-        //? if <26 {
         private void drawRow(GuiGraphics guiGraphics) {
             int color = rowColor();
             String ping = pingText();
-            guiGraphics.drawString(GuiProxyList.this.font, this.name, this.rowLeft + 2, this.rowTop + 2, color);
-            guiGraphics.drawString(GuiProxyList.this.font, this.proxy.ipPort, this.rowLeft + 2, this.rowTop + 13, 0xFF808080);
+            Draw.text(guiGraphics, GuiProxyList.this.font, this.name, this.rowLeft + 2, this.rowTop + 2, color);
+            Draw.text(guiGraphics, GuiProxyList.this.font, this.proxy.ipPort, this.rowLeft + 2, this.rowTop + 13, 0xFF808080);
             int iconX = this.rowLeft + this.rowWidth - 14;
             ResourceLocation sprite = ResourceLocation.withDefaultNamespace("server_list/" + pingSprite());
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite,
                     iconX, this.rowTop + 2, 10, 8);
-            guiGraphics.drawString(GuiProxyList.this.font, ping, iconX - 2 - GuiProxyList.this.font.width(ping), this.rowTop + 2, color);
+            Draw.text(guiGraphics, GuiProxyList.this.font, ping, iconX - 2 - GuiProxyList.this.font.width(ping), this.rowTop + 2, color);
         }
-        //?} else {
-        /*private void drawRow(GuiGraphics guiGraphics) {
-            int color = rowColor();
-            String ping = pingText();
-            guiGraphics.text(GuiProxyList.this.font, this.name, this.rowLeft + 2, this.rowTop + 2, color);
-            guiGraphics.text(GuiProxyList.this.font, this.proxy.ipPort, this.rowLeft + 2, this.rowTop + 13, 0xFF808080);
-            int iconX = this.rowLeft + this.rowWidth - 14;
-            ResourceLocation sprite = ResourceLocation.withDefaultNamespace("server_list/" + pingSprite());
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite,
-                    iconX, this.rowTop + 2, 10, 8);
-            guiGraphics.text(GuiProxyList.this.font, ping, iconX - 2 - GuiProxyList.this.font.width(ping), this.rowTop + 2, color);
-        }
-        *///?}
     }
 }

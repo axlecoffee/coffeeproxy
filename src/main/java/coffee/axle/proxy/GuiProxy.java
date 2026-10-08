@@ -95,63 +95,33 @@ public class GuiProxy extends Screen {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
     *///?}
 
-        //? if <26 {
-        guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.options.name").getString(),
+        Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.options.name").getString(),
                 positionX, positionY[1] - 10, 0xFFA0A0A0);
-        guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.options.proxyType").getString(),
+        Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.options.proxyType").getString(),
                 positionX, positionY[2] - 10, 0xFFA0A0A0);
-        guiGraphics.drawCenteredString(this.font,
+        Draw.centeredText(guiGraphics, this.font,
                 Component.translatable("ui.coffeeproxy.options.auth").getString(), this.width / 2, positionY[4] + 8,
                 0xFFFFFFFF);
-        guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.options.ipPort").getString(),
+        Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.options.ipPort").getString(),
                 positionX, positionY[3] - 10, 0xFFA0A0A0);
 
-        this.name.render(guiGraphics, mouseX, mouseY, partialTicks);
-        this.ipPort.render(guiGraphics, mouseX, mouseY, partialTicks);
+        Draw.widget(guiGraphics, this.name, mouseX, mouseY, partialTicks);
+        Draw.widget(guiGraphics, this.ipPort, mouseX, mouseY, partialTicks);
         if (currentType == Proxy.ProxyType.SOCKS4) {
-            guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.auth.id").getString(),
+            Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.auth.id").getString(),
                     positionX, positionY[5] - 10, 0xFFA0A0A0);
-            this.username.render(guiGraphics, mouseX, mouseY, partialTicks);
+            Draw.widget(guiGraphics, this.username, mouseX, mouseY, partialTicks);
         } else {
-            guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.auth.password").getString(),
+            Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.auth.password").getString(),
                     positionX, positionY[6] - 10, 0xFFA0A0A0);
-            guiGraphics.drawString(this.font, Component.translatable("ui.coffeeproxy.auth.username").getString(),
+            Draw.text(guiGraphics, this.font, Component.translatable("ui.coffeeproxy.auth.username").getString(),
                     positionX, positionY[5] - 10, 0xFFA0A0A0);
-            this.username.render(guiGraphics, mouseX, mouseY, partialTicks);
-            this.password.render(guiGraphics, mouseX, mouseY, partialTicks);
+            Draw.widget(guiGraphics, this.username, mouseX, mouseY, partialTicks);
+            Draw.widget(guiGraphics, this.password, mouseX, mouseY, partialTicks);
         }
 
-        guiGraphics.drawCenteredString(this.font, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
+        Draw.centeredText(guiGraphics, this.font, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
                 positionY[7] + 5, 0xFFA0A0A0);
-        //?} else {
-        /*guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.options.name").getString(),
-                positionX, positionY[1] - 10, 0xFFA0A0A0);
-        guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.options.proxyType").getString(),
-                positionX, positionY[2] - 10, 0xFFA0A0A0);
-        guiGraphics.centeredText(this.font,
-                Component.translatable("ui.coffeeproxy.options.auth").getString(), this.width / 2, positionY[4] + 8,
-                0xFFFFFFFF);
-        guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.options.ipPort").getString(),
-                positionX, positionY[3] - 10, 0xFFA0A0A0);
-
-        this.name.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        this.ipPort.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        if (currentType == Proxy.ProxyType.SOCKS4) {
-            guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.auth.id").getString(),
-                    positionX, positionY[5] - 10, 0xFFA0A0A0);
-            this.username.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        } else {
-            guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.auth.password").getString(),
-                    positionX, positionY[6] - 10, 0xFFA0A0A0);
-            guiGraphics.text(this.font, Component.translatable("ui.coffeeproxy.auth.username").getString(),
-                    positionX, positionY[5] - 10, 0xFFA0A0A0);
-            this.username.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-            this.password.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        }
-
-        guiGraphics.centeredText(this.font, !msg.isEmpty() ? msg : testPing.state, this.width / 2,
-                positionY[7] + 5, 0xFFA0A0A0);
-        *///?}
     }
 
     @Override
