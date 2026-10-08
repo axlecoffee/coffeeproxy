@@ -99,16 +99,13 @@ public class Proxy {
         return cachedAddress;
     }
 
+    private String meowEmpty(String value, String fallback) { return value.isEmpty() ? fallback : value; }
+
     public ProxyHandler getHandler() {
         return switch (type) {
-            case SOCKS5 -> new Socks5ProxyHandler(resolveProxyAddress(),
-                    username.isEmpty() ? null : username,
-                    password.isEmpty() ? null : password);
-            case SOCKS4 -> new Socks4ProxyHandler(resolveProxyAddress(),
-                    username.isEmpty() ? null : username);
-            case HTTP -> new HttpProxyHandler(resolveProxyAddress(),
-                    username.isEmpty() ? null : username,
-                    password.isEmpty() ? "" : password);
+            case SOCKS5 -> new Socks5ProxyHandler(resolveProxyAddress(), meowEmpty(username, null), meowEmpty(password, null));
+            case SOCKS4 -> new Socks4ProxyHandler(resolveProxyAddress(), meowEmpty(username, null));
+            case HTTP -> new HttpProxyHandler(resolveProxyAddress(), meowEmpty(username, null), meowEmpty(password, ""));
         };
     }
 

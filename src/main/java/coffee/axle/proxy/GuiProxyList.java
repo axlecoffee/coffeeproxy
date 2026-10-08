@@ -229,7 +229,6 @@ public class GuiProxyList extends Screen {
             return "";
         }
 
-        // vanilla ServerSelectionList bands: <=150 full bars, then 300/600/1000
         private String pingSprite() {
             long l = this.testPing.latency;
             if (l < 0) {
