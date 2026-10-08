@@ -46,6 +46,11 @@ public class GuiProxyList extends Screen {
             this.proxyList.addProxy(entry.getKey(), entry.getValue());
         }
 
+        this.addRenderableWidget(Button
+                .builder(Component.translatable("ui.coffeeproxy.list.importExport"),
+                        button -> Coffeeproxy.openScreen(new GuiImportExport(this)))
+                .bounds(8, 8, 100, 20).build());
+
         int x1 = this.width / 2 - 154;
         int x2 = x1 + 104;
         int x3 = x1 + 208;
@@ -139,7 +144,7 @@ public class GuiProxyList extends Screen {
         this.deleteButton.active = selected != null;
         this.editButton.active = selected != null;
 
-        Draw.centeredText(guiGraphics, this.font, TEXT_TITLE, this.width / 2, 8, 0xFFFFFFFF);
+        Draw.centeredText(guiGraphics, this.font, TEXT_TITLE, this.width / 2, 14, 0xFFFFFFFF);
     }
 
     @Override
@@ -151,7 +156,7 @@ public class GuiProxyList extends Screen {
 
     private class ProxyList extends ObjectSelectionList<ProxyEntry> {
         ProxyList(Minecraft minecraft) {
-            super(minecraft, GuiProxyList.this.width, GuiProxyList.this.height - 116, 28, 36);
+            super(minecraft, GuiProxyList.this.width, GuiProxyList.this.height - 124, 36, 36);
         }
 
         @Override

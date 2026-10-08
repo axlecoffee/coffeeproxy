@@ -16,6 +16,7 @@
     "ui.coffeeproxy.list.refresh": "Refresh All",
     "ui.coffeeproxy.list.add": "Add",
     "ui.coffeeproxy.list.edit": "Edit",
+    "ui.coffeeproxy.list.importExport": "Import/Export",
     "ui.coffeeproxy.list.done": "Done",
     "ui.coffeeproxy.list.failed": "Failed",
     "ui.coffeeproxy.auth.id": "User ID: ",
@@ -27,5 +28,16 @@
     "ui.coffeeproxy.err.cantPing": "Can't ping %d",
     "ui.coffeeproxy.err.cantPingReason": "Can't ping %d: %d",
     "ui.coffeeproxy.ping.pinging": "Pinging %d...",
-    "ui.coffeeproxy.ping.showPing": "Ping: %dms"
+    "ui.coffeeproxy.ping.showPing": "Ping: %dms",
+    "ui.coffeeproxy.io.title": "Import/Export",
+    "ui.coffeeproxy.io.clipboard": "Import from Clipboard",
+    "ui.coffeeproxy.io.url": "Import from URL",
+    "ui.coffeeproxy.io.overwrite": "Save (overwrite)",
+    "ui.coffeeproxy.io.append": "Save (append)",
+    "ui.coffeeproxy.io.export": "Export to Clipboard",
+    "ui.coffeeproxy.io.fetching": "Fetching...",
+    "ui.coffeeproxy.io.loaded": "Loaded %d Proxies!",
+    "ui.coffeeproxy.io.undefined": "Undefined!",
+    "ui.coffeeproxy.io.fetchError": "Failed to fetch from URL",
+    "ui.coffeeproxy.io.copied": "Copied to clipboard!"
 }
